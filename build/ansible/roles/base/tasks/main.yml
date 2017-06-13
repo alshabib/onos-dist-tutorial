@@ -1,0 +1,11 @@
+- name: Update apt
+  apt:
+    update_cache: yes
+  tags: [base]
+
+- name: Installing basic packages
+  apt:
+    name: "{{ item }}"
+    force: yes
+  with_items: "{{ basic_packages }}"
+  tags: [base]

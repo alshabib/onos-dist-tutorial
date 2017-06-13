@@ -1,0 +1,74 @@
+- name: ONOS image is present
+  docker_image:
+    name: onosproject/onos
+    tag: "{{ onos_version }}"
+
+- name: Mininet image is present
+  docker_image:
+    name: alshabib/mininet
+
+- name: Create dist network
+  docker_network:
+    name: "{{ docker_network_name }}"
+    ipam_options:
+      subnet: "{{ docker_network_subnet }}"
+      gateway: "{{ docker_network_gw }}"
+
+- name: Start ONOS and connect
+  docker_container:
+    name: "{{ item.value.name }}"
+    image: "onosproject/onos:{{ onos_version }}"
+    networks:
+      - name: "{{ docker_network_name }}"
+        ipv4_address: "{{ item.value.ip }}"
+    ports:
+      "{{ item.value.ports }}"
+    restart_policy: always
+    env:
+      ONOS_APPS: "{{ onos_apps }}"
+  with_dict: "{{ docker_onos }}"
+
+- name: Render Cluster json
+  template:
+    src: templates/cluster.json.j2
+    dest: /tmp/cluster.json
+
+- name: Register file
+  slurp:
+    src: /tmp/cluster.json
+  register: cluster
+
+- name: Wait for ONOS
+  wait_for:
+    port: 8181
+    delay: "{{ onos_wait_timeout }}"
+
+- name: Clusterize onos
+  uri:
+    url: http://{{ item.value.ip }}:8181/onos/v1/cluster/configuration
+    method: POST
+    user: "{{ onos_user }}"
+    password: "{{ onos_pass }}"
+    body: "{{ cluster['content'] | b64decode }}"
+    force_basic_auth: yes
+    body_format: json
+  with_dict: "{{ docker_onos }}"
+
+- name: Start Mininet and connect to ONOS
+  docker_container:
+    name: "mininet"
+    image: "alshabib/mininet"
+    networks:
+      - name: "{{ docker_network_name }}"
+        ipv4_address: "{{ mininet_ip }}"
+    restart_policy: always
+    env:
+      MININET_SCRIPT: /topo.py
+      MININET_SCRIPT_OPTIONS: "{{ docker_onos.onos1.ip }}:6653 {{ docker_onos.onos2.ip }}:6653 {{ docker_onos.onos3.ip }}:6653"
+    privileged: True
+    capabilities: ALL
+    interactive: True
+    tty: True
+    detach: True
+    volumes:
+      - /lib/modules:/lib/modules

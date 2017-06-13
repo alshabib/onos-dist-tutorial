@@ -1,0 +1,7 @@
+{
+  "ipPrefix": "{{ onos_nic }}",
+  "nodes":[
+  {% for key, value in docker_onos.iteritems() %}
+  { "id": "{{ value.ip }}", "ip": "{{ value.ip }}", "tcpPort": 9876 },
+  {% endfor %}
+]}

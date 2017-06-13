@@ -3,3 +3,9 @@ packer_cache/
 
 # For built boxes
 *.box
+
+*.log
+*.tfstate
+
+Vagrantfile
+.vagrant

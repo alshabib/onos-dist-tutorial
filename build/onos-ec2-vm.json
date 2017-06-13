@@ -1,0 +1,40 @@
+{
+  "builders" : [
+    {
+      "type" : "amazon-ebs",
+      "region": "{{user `region`}}",
+      "instance_type" : "{{ user `instance_type` }}",
+      "ssh_username" : "{{ user `default_user` }}",
+      "ami_name" : "ONOS Distributed Tutorial {{ timestamp }}",
+      "vpc_id" : "{{ user `default_vpc` }}",
+      "subnet_id" : "{{ user `default_subnet` }}",
+      "spot_price" : "{{ user `spot_price` }}",
+      "spot_price_auto_product" : "{{ user `spot_price_auto_product`}}",
+      "source_ami_filter": {
+          "filters": {
+          "virtualization-type": "hvm",
+          "name": "{{ user `default_ami_name` }}",
+          "root-device-type": "ebs"
+          },
+          "most_recent": true
+      },
+      "tags" : {
+        "timestamp" : "{{ timestamp }}",
+        "onos-version" : " {{ user `onos_version` }}"
+      }
+    }
+  ],
+  "provisioners": [
+    {
+      "type": "ansible",
+      "playbook_file": "ansible/master.yml",
+      "extra_arguments": [ "--extra-vars", "onos_version={{ user `onos_version` }}" ]
+    }
+  ],
+  "post-processors": [
+    {
+      "type": "vagrant",
+      "keep_input_artifact": false
+    }
+  ]
+}

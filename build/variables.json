@@ -1,0 +1,13 @@
+{
+  "onos_version" : "1.10.0",
+  "region" : "us-west-1",
+  "instance_type" : "m4.xlarge",
+  "_comment": "Use the below to bid for spot pricing, but make sure you instance_type supports spot pricing",
+  "spot_price" : "0",
+  "spot_price_auto_product" : "Linux/UNIX (Amazon VPC)",
+  "_comment": "Add your vpc id below if you are using a VPC-only instance other leave it blank.",
+  "default_vpc" : "vpc-c7e750a3",
+  "default_subnet" : "subnet-ac67f4f4",
+  "default_ami_name" : "*ubuntu-xenial-16.04-amd64-server-*",
+  "default_user" : "ubuntu"
+}
