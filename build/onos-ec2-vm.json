@@ -8,6 +8,8 @@
       "ami_name" : "ONOS Distributed Tutorial {{ timestamp }}",
       "vpc_id" : "{{ user `default_vpc` }}",
       "subnet_id" : "{{ user `default_subnet` }}",
+      "associate_public_ip_address" : true,
+      "ami_regions" : "{{ user `default_ami_regions` }}",
       "spot_price" : "{{ user `spot_price` }}",
       "spot_price_auto_product" : "{{ user `spot_price_auto_product`}}",
       "source_ami_filter": {
