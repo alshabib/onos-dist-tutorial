@@ -23,8 +23,10 @@ variable "ubuntu_amis" {
     description = "ONOS Tutorial AMI Ids, if you change, make sure it is compatible with instance type, not all AMIs allow all instance types "
 
     default = {
-      eu-central-1  = "ami-2d45e142"
-      us-west-1     = "ami-cc87a5ac"
+      eu-central-1  = "ami-5e6aca31"
+      eu-west-1     = "ami-c9d332b0"
+      eu-west-2     = "ami-c6cfd9a2"
+      us-west-1     = "ami-f8edc298"
     }
 }
 

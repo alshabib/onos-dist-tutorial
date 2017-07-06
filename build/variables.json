@@ -10,5 +10,5 @@
   "default_subnet" : "subnet-1cc5f45a",
   "default_ami_name" : "*ubuntu-xenial-16.04-amd64-server-*",
   "default_user" : "ubuntu",
-  "default_ami_regions" : "eu-central-1"
+  "default_ami_regions" : "eu-west-1,eu-west-2,eu-central-1"
 }
